@@ -1,7 +1,9 @@
 import express,{Application} from "express"
 import mongoose from "mongoose"
+import cookieParser from "cookie-parser"
 import "dotenv/config"
 import { createServer, Server } from "http";
+import authRoute from "./route/user";
 
 const app: Application = express();
 const server: Server = createServer(app);
@@ -16,7 +18,12 @@ if (!process.env.PORT) {
 
 const port  = parseInt(process.env.PORT)
 const mongo_url  = String(process.env.MONGO_URL)
+
+
 app.use(express.json());
+app.use(cookieParser())
+
+app.use("/api/user",authRoute)
 
 mongoose.connect(mongo_url)
   .then(() => console.log("Connected to mongoDB"))
@@ -29,6 +36,6 @@ server.listen(port,() => {
 })
 
 // for debugging 
-process.on("uncaughtException",(err) => {
-    console.error(`Uncaught exception ${err}`)
-})
+// process.on("uncaughtException",(err) => {
+//     console.error(`Uncaught exception ${err.stack}`)
+// })
