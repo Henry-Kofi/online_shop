@@ -15,7 +15,7 @@ export const register = async (req: Request, res: Response) => {
         if(existingUser){ // user exists
             return res.status(400).json({
                 success: true,
-                message: "Email already in use"
+                message: "Email already in use😁"
             })
         }
 
@@ -34,7 +34,7 @@ export const register = async (req: Request, res: Response) => {
         scheduler.scheduleEvent(newUser)
         return res.status(200).json({
             success: true,
-            message: "Success creating user accout✔",
+            message: "Success creating user accout🎉",
             data: newUser
         })
     } catch (error) {
@@ -84,3 +84,36 @@ export const verifyUser = async (req: Request,res: Response) => {
         })
     }
 }
+
+export const login = async (req:Request, res: Response) => {
+    const {email,password} = req.body;
+    try {
+        const existingUser: User | null = await userModel.findOne({email: email})
+        if(!existingUser){
+            return res.status(404).json({
+                success:false, 
+                message:"Email is not registered!😁"
+            });
+        }
+        const passwordMatch = await bcryptjs.compare(password,existingUser.password);
+        if(!passwordMatch){
+            return res.status(400).json({
+                success: false,
+                message: "Invalid password or email🔏"
+            })
+        }
+        const token = await generateToken(existingUser);
+        res.cookie("token",token)
+        return res.status(200).json({
+            success: true,
+            message: "Login successful🎉"
+        })
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json({
+            success: false,
+            message: "Internal server error🚨"
+        })
+    }
+}
+

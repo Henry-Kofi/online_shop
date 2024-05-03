@@ -6,7 +6,7 @@ export interface User extends Document{
     password: string;
     name: string;
     role: string;
-    isVerified: boolean
+    isVerified: boolean;
 }
 
 const userSchema: Schema = new Schema<User>({

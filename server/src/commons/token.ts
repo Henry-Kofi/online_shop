@@ -26,7 +26,7 @@ export interface Token {
     user?: string | JwtPayload
 }
 const generateToken = (user: User) => {
-    return jwt.sign({id: user._id,role:user.role,isVerified: user.isVerified},JWT.secret,{
+    return jwt.sign({id: user._id,role:user.role,isVerified: user.isVerified,lastActive: Date.now()},JWT.secret,{
         expiresIn: JWT.exp
     })
 }
